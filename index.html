@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Syringe Calibration Workspace</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Load the 3D Drawing Engine first, then load the Core Controller Script -->
+    <script src="syringeRenderer.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <h1>Clinical Syringe Calibration Matrix</h1>
+    
+    <!-- Comprehensive Clinical Anatomy Reference Guide -->
+    <section class="clinical-anatomy-guide">
+        <h2>Foundational Anatomy of a Syringe</h2>
+        <p class="nursing-context"><strong>Clinical Note (Alberta Nursing Curriculum Standards):</strong> Maintaining absolute sterility of specific syringe components during preparation is a key competency. While the barrel exterior, flange, and thumb rest are touch-safe, the <strong>inner plunger shaft, rubber stopper seal, needle hub base, and needle core must remain completely sterile</strong> to prevent systemic patient contamination during parenteral medication administration loops.</p>
+        
+        <div class="anatomy-grid">
+            <div class="anatomy-card"><h4>1. Needle Hub / Tip</h4><p>The connector socket that mounts the needle assembly securely onto the forward syringe barrel tip nozzle core via a secure lock pattern.</p></div>
+            <div class="anatomy-card"><h4>2. Rubber Stopper</h4><p>The black synthetic piston seal tip inside the barrel cylinder. Dosages are measured strictly along the <strong>forward geometric edge line</strong>.</p></div>
+            <div class="anatomy-card"><h4>3. Scale (Graduations)</h4><p>The printed volume measurement marking increments stamped along the plastic barrel wall matching exact brand increments.</p></div>
+            <div class="anatomy-card"><h4>4. Barrel</h4><p>The clear outer cylindrical plastic holding chamber that securely contains the fluid medication volume before discharge cycles.</p></div>
+            <div class="anatomy-card"><h4>5. Flange</h4><p>The wide plastic wing tabs at the rear of the syringe body barrel. Serves as a dual finger-anchor grip foundation.</p></div>
+            <div class="anatomy-card"><h4>6. Plunger (Shaft)</h4><p>The interior structural piston rod mechanism connected directly to the rubber seal. This shaft must remain sterile.</p></div>
+            <div class="anatomy-card"><h4>7. Thumb Rest</h4><p>The broad plastic pad disk located at the outermost structural end of the plunger assembly. Grab here to manipulate volume.</p></div>
+        </div>
+    </section>
+
+    <!-- Directory Navigation Selection Grid -->
+    <nav class="syringe-directory">
+        <h2>Select a Syringe to Calibrate</h2>
+        <ul class="directory-grid">
+            <li><a href="#syringe-1ml">1. 01 mL Precision Syringe</a></li>
+            <li><a href="#syringe-3ml">2. 03 mL Standard Syringe</a></li>
+            <li><a href="#syringe-5ml">3. 05 mL Capacity Syringe</a></li>
+        </ul>
+    </nav>
+
+    <!-- 1 mL SYRINGE WORKSPACE -->
+    <section id="syringe-1ml" class="syringe-workspace">
+        <h3>1. 01 mL Precision Syringe Workspace</h3>
+        <p class="description">Slender barrel design for precise low-volume medication tracking (0.01 mL increments).</p>
+        <div class="canvas-wrapper"><canvas class="syringe-canvas" data-type="1ml" data-max="1" data-unit="mL" data-color="rgba(0, 123, 255, 0.35)"></canvas></div>
+        <div class="control-panel">
+            <label>Set Volume:</label>
+            <input type="number" class="volume-input" min="0" max="1" step="0.01" value="0">
+            <span class="live-readout">Current: 0.00 mL / 1 mL</span>
+            <button class="download-btn">⬇ Download PNG</button>
+        </div>
+    </section>
+
+    <!-- 3 mL SYRINGE WORKSPACE -->
+    <section id="syringe-3ml" class="syringe-workspace">
+        <h3>2. 03 mL Standard Syringe Workspace</h3>
+        <p class="description">Standard injection syringe featuring explicit fractional gradients and an accented circular 2 mL baseline indicator.</p>
+        <div class="canvas-wrapper"><canvas class="syringe-canvas" data-type="3ml" data-max="3" data-unit="mL" data-color="rgba(40, 167, 69, 0.35)"></canvas></div>
+        <div class="control-panel">
+            <label>Set Volume:</label>
+            <input type="number" class="volume-input" min="0" max="3" step="0.1" value="0">
+            <span class="live-readout">Current: 0.00 mL / 3 mL</span>
+            <button class="download-btn">⬇ Download PNG</button>
+        </div>
+    </section>
+
+    <!-- 5 mL SYRINGE WORKSPACE -->
+    <section id="syringe-5ml" class="syringe-workspace">
+        <h3>3. 05 mL Capacity Syringe Workspace</h3>
+        <p class="description">Wider-profile standard capacity tool designed for precise volume tracking up to 5 mL.</p>
+        <div class="canvas-wrapper"><canvas class="syringe-canvas" data-type="5ml" data-max="5" data-unit="mL" data-color="rgba(111, 66, 193, 0.35)"></canvas></div>
+        <div class="control-panel">
+            <label>Set Volume:</label>
+            <input type="number" class="volume-input" min="0" max="5" step="0.1" value="0">
+            <span class="live-readout">Current: 0.00 mL / 5 mL</span>
+            <button class="download-btn">⬇ Download PNG</button>
+        </div>
+    </section>
+
+</body>
+</html>
