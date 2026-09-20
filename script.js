@@ -44,11 +44,26 @@ class SyringeSimulator {
             this.render();
         });
 
-        this.canvas.addEventListener('mousedown', (e) => this.startDrag(e));
-        window.addEventListener('mousemove', (e) => this.dragMove(e));
+        // 1. DESKTOP MOUSE EVENT LISTENERS
+        this.canvas.addEventListener('mousedown', (e) => this.startDrag(e.clientX, e.clientY, e));
+        window.addEventListener('mousemove', (e) => this.dragMove(e.clientX, e));
         window.addEventListener('mouseup', () => this.endDrag());
 
-        // TRIGGER EXTENSION FILE CAPTURE: Processes canvas pipeline extraction securely
+        // 2. MOBILE & TABLET TOUCH EVENT LISTENERS (ADDED FOR MOBILE COMPATIBILITY)
+        this.canvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) {
+                this.startDrag(e.touches[0].clientX, e.touches[0].clientY, e);
+            }
+        }, { passive: false });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                this.dragMove(e.touches[0].clientX, e);
+            }
+        }, { passive: false });
+
+        window.addEventListener('touchend', () => this.endDrag());
+
         if (this.downloadBtn) {
             this.downloadBtn.addEventListener('click', () => this.downloadAsPNG());
         }
@@ -56,25 +71,27 @@ class SyringeSimulator {
         this.render();
     }
 
-    startDrag(e) {
+    // Consolidated handler to check interaction coordinates
+    startDrag(clientX, clientY, event) {
         const rect = this.canvas.getBoundingClientRect();
-        const clickX = (e.clientX - rect.left) * (this.canvas.width / rect.width);
-        const clickY = (e.clientY - rect.top) * (this.canvas.height / rect.height);
+        const clickX = (clientX - rect.left) * (this.canvas.width / rect.width);
+        const clickY = (clientY - rect.top) * (this.canvas.height / rect.height);
         
         const frontStopperEdgeX = this.getPlungerPixelPosition();
         const currentHandleX = frontStopperEdgeX + this.stopperWidthPx + this.plungerLengthPx;
         
-        if (clickX >= currentHandleX - 5 && clickX <= currentHandleX + 18 &&
+        if (clickX >= currentHandleX - 8 && clickX <= currentHandleX + 22 &&
             clickY >= this.barrelTopPx - 15 && clickY <= this.barrelTopPx + this.barrelHeightPx + 15) {
             this.isDragging = true;
-            e.preventDefault();
+            event.preventDefault(); // Prevents mobile screens from bouncing or scrolling when dragging
         }
     }
 
-    dragMove(e) {
+    // Consolidated handler to map drag tracking movements
+    dragMove(clientX, event) {
         if (!this.isDragging) return;
         const rect = this.canvas.getBoundingClientRect();
-        const currentX = (e.clientX - rect.left) * (this.canvas.width / rect.width);
+        const currentX = (clientX - rect.left) * (this.canvas.width / rect.width);
         
         const targetFrontStopperEdgeX = currentX - this.plungerLengthPx - this.stopperWidthPx;
         const currentPercentage = (targetFrontStopperEdgeX - this.barrelStartPx) / this.trackLength;
@@ -83,6 +100,8 @@ class SyringeSimulator {
         this.currentVolume = clampedPercentage * this.maxCapacity;
         this.updateUIElements(true);
         this.render();
+        
+        event.preventDefault(); // Lock mobile screen context window in place during active swipe
     }
 
     endDrag() { this.isDragging = false; }
@@ -98,22 +117,12 @@ class SyringeSimulator {
         return this.barrelStartPx + ((this.currentVolume / this.maxCapacity) * this.trackLength);
     }
 
-    // NEW LOGIC COMPONENT: Bypasses file path constraints to extract instant image links
     downloadAsPNG() {
-        // Force a fresh, clean render pass before exporting
         this.render();
-        
-        // Extract canvas contents as a base64 image data-url string
         const imageURL = this.canvas.toDataURL('image/png');
-        
-        // Generate an in-memory virtual link element to trigger the browser's download core
         const downloadLink = document.createElement('a');
         downloadLink.href = imageURL;
-        
-        // Define a clear descriptive naming format for student skills submissions
         downloadLink.download = `Syringe_${this.syringeType}_Calibration_${this.currentVolume.toFixed(2)}mL.png`;
-        
-        // Click and cleanly remove the hook from page context arrays
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
